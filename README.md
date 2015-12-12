@@ -27,7 +27,9 @@ hqx test.png 4 > test-4x.png
 Usage
 ---
 
-  var scaledCanvas = hqx( originalImage, 3 );
+```javascript
+var scaledCanvas = hqx( originalImage, 3 );
+```
 
 The second argument is the scaling factor. hqx supports 2, 3 and 4. See test.html for an example.
 

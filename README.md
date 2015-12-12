@@ -7,6 +7,8 @@ This project is a fork of
 [phoboslab/js-hqx](https://github.com/phoboslab/js-hqx), adding support to Node,
 through [node-canvas](https://github.com/Automattic/node-canvas).
 
+[Live example](http://gamestdio.github.io/hqx)
+
 CLI Usage
 ---
 
@@ -31,10 +33,9 @@ Usage
 var scaledCanvas = hqx( originalImage, 3 );
 ```
 
-The second argument is the scaling factor. hqx supports 2, 3 and 4. See test.html for an example.
+The second argument is the scaling factor. hqx supports 2, 3 and 4. See index.html for an example.
 
 License
 ---
 
 Please see LICENSE file.
-

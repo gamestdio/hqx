@@ -1,9 +1,9 @@
 "use strict";
 
-if (typeof(HTMLCanvasElement)==="undefined") {
+if (typeof(window)==="undefined") {
   // Make node-canvas available as a regular HTMLCanvasElement
-  var HTMLCanvasElement = require('canvas')
-  var document = { createElement: function() { return new HTMLCanvasElement() } }
+  window.HTMLCanvasElement = require('canvas')
+  window.document = { createElement: function() { return new HTMLCanvasElement() } }
 }
 
 var
@@ -148,7 +148,7 @@ var getVendorAttribute = function( el, attr ) {
 // pixels from an image. The naive method recently failed on retina
 // devices with a backgingStoreRatio != 1
 var getImagePixels = function( image, x, y, width, height ) {
-	var canvas = document.createElement('canvas');
+	var canvas = window.document.createElement('canvas');
 	var ctx = canvas.getContext('2d');
 
 	var ratio = getVendorAttribute( ctx, 'backingStorePixelRatio' ) || 1;
@@ -175,14 +175,14 @@ module.exports = function hqx( img, scale ) {
 	}
 
 	var orig, origCtx, scaled, origPixels;
-	if (img instanceof HTMLCanvasElement){
+	if (img instanceof window.HTMLCanvasElement){
 		orig = img;
 		origCtx = orig.getContext('2d');
 		scaled = orig;
 		origPixels = origCtx.getImageData(0, 0, orig.width, orig.height).data;
 	} else {
 		origPixels = getImagePixels( img, 0, 0, img.width, img.height ).data;
-		scaled = document.createElement('canvas');
+		scaled = window.document.createElement('canvas');
 	}
 
 	// pack RGBA colors into integers

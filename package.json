@@ -1,13 +1,13 @@
 {
   "name": "hqx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pixel Art Scaling Algorithm for JavaScript/Canvas",
   "main": "src/index.js",
   "bin": {
     "hqx": "./bin/hqx"
   },
   "scripts": {
-    "dist": "browserify -e src/index.js --exclude 'node_modules/**' --ignore-missing --bare  --standalone hqx -o dist/hqx.js",
+    "dist": "browserify -e src/index.js --exclude 'node_modules/**' --ignore-missing --bare --standalone hqx -o dist/hqx.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

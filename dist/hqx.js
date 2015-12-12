@@ -1,10 +1,10 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.hqx = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-if (typeof(HTMLCanvasElement)==="undefined") {
+if (typeof(window)==="undefined") {
   // Make node-canvas available as a regular HTMLCanvasElement
-  var HTMLCanvasElement = require('canvas')
-  var document = { createElement: function() { return new HTMLCanvasElement() } }
+  window.HTMLCanvasElement = require('canvas')
+  window.document = { createElement: function() { return new HTMLCanvasElement() } }
 }
 
 var
@@ -149,7 +149,7 @@ var getVendorAttribute = function( el, attr ) {
 // pixels from an image. The naive method recently failed on retina
 // devices with a backgingStoreRatio != 1
 var getImagePixels = function( image, x, y, width, height ) {
-	var canvas = document.createElement('canvas');
+	var canvas = window.document.createElement('canvas');
 	var ctx = canvas.getContext('2d');
 
 	var ratio = getVendorAttribute( ctx, 'backingStorePixelRatio' ) || 1;
@@ -176,14 +176,14 @@ module.exports = function hqx( img, scale ) {
 	}
 
 	var orig, origCtx, scaled, origPixels;
-	if (img instanceof HTMLCanvasElement){
+	if (img instanceof window.HTMLCanvasElement){
 		orig = img;
 		origCtx = orig.getContext('2d');
 		scaled = orig;
 		origPixels = origCtx.getImageData(0, 0, orig.width, orig.height).data;
 	} else {
 		origPixels = getImagePixels( img, 0, 0, img.width, img.height ).data;
-		scaled = document.createElement('canvas');
+		scaled = window.document.createElement('canvas');
 	}
 
 	// pack RGBA colors into integers

@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+'use strict';
+
+var fs = require('fs')
+  , hqx = require('../src/index.js')
+  , Canvas = require('canvas')
+  , Image = Canvas.Image
+  , scale = parseInt(process.argv[3] || 4)
+
+// Make node-canvas available as a regular HTMLCanvasElement
+global.HTMLCanvasElement = Canvas
+global.document = { createElement: function() { return new HTMLCanvasElement() } }
+
+if (!fs.existsSync(process.argv[2])) {
+  console.log("hqx usage:")
+  console.log("\thqx input [scale]")
+  console.log("\thqx input.png 4")
+
+} else {
+  var file = fs.readFileSync(process.argv[2])
+  var image = new Image()
+  image.src = file
+
+  var canvas = hqx(image, scale)
+  var stream = canvas.pngStream();
+
+  stream.on('data', function(chunk){ process.stdout.write(chunk) });
+  stream.on('end', function(){ process.exit() });
+}

@@ -1,57 +1,32 @@
-// ==ClosureCompiler==
-// @compilation_level SIMPLE_OPTIMIZATIONS
-// ==/ClosureCompiler==
+"use strict";
 
-/*
- * Copyright (C) 2003 Maxim Stepin ( maxst@hiend3d.com )
- *
- * Copyright (C) 2010 Cameron Zemek ( grom@zeminvaders.net )
- *
- * Copyright (C) 2010 Dominic Szablewski ( mail@phoboslab.org )
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+if (typeof(HTMLCanvasElement)==="undefined") {
+  // Make node-canvas available as a regular HTMLCanvasElement
+  var HTMLCanvasElement = require('canvas')
+  var document = { createElement: function() { return new HTMLCanvasElement() } }
+}
 
-
-(function(window){
-
-"use strict"; // strict will be optimized on engines (https://developer.mozilla.org/en/JavaScript/Strict_mode)
-
-var 
+var
 	_src = null,
 	_dest = null,
-	
+
 	_MASK_2 = 0x00FF00,
 	_MASK_13 = 0xFF00FF,
-	
+
 	_Ymask = 0x00FF0000,
 	_Umask = 0x0000FF00,
 	_Vmask = 0x000000FF,
-	
+
 	_trY = 0x00300000,
 	_trU = 0x00000700,
 	_trV = 0x00000006;
-
-var _Math = window.Math; // global to local. SHALL NOT cache abs directly (http://jsperf.com/math-vs-global/2)
 
 var _RGBtoYUV = function( c ) {
 	var r = (c & 0xFF0000) >> 16;
 	var g = (c & 0x00FF00) >> 8;
 	var b =  c & 0x0000FF;
 	return  ((/*y=*/(0.299*r + 0.587*g + 0.114*b) | 0) << 16) +
-		((/*u=*/((-0.169*r - 0.331*g + 0.5*b) + 128) | 0) << 8) + 
+		((/*u=*/((-0.169*r - 0.331*g + 0.5*b) + 128) | 0) << 8) +
 		(/*v=*/((0.5*r - 0.419*g - 0.081*b) + 128) | 0);
 };
 
@@ -59,9 +34,9 @@ var _Diff = function( w1, w2 ) {
 	// Mask against RGB_MASK to discard the alpha channel
 	var YUV1 = _RGBtoYUV(w1);
 	var YUV2 = _RGBtoYUV(w2);
-	return  ((_Math.abs((YUV1 & _Ymask) - (YUV2 & _Ymask)) > _trY ) ||
-		( _Math.abs((YUV1 & _Umask) - (YUV2 & _Umask)) > _trU ) ||
-		( _Math.abs((YUV1 & _Vmask) - (YUV2 & _Vmask)) > _trV ) );
+	return  ((Math.abs((YUV1 & _Ymask) - (YUV2 & _Ymask)) > _trY ) ||
+		( Math.abs((YUV1 & _Umask) - (YUV2 & _Umask)) > _trU ) ||
+		( Math.abs((YUV1 & _Vmask) - (YUV2 & _Vmask)) > _trV ) );
 };
 
 /* Interpolate functions */
@@ -186,14 +161,14 @@ var getImagePixels = function( image, x, y, width, height ) {
 	canvas.height = Math.ceil( realHeight );
 
 	ctx.drawImage( image, 0, 0, realWidth, realHeight );
-	
+
 	return (ratio === 1)
 		? ctx.getImageData( x, y, width, height )
 		: ctx.getImageDataHD( x, y, width, height );
 };
 
 
-window.hqx = function( img, scale ) {
+module.exports = function hqx( img, scale ) {
 	// We can only scale with a factor of 2, 3 or 4
 	if( [2,3,4].indexOf(scale) === -1 ) {
 		return img;
@@ -209,8 +184,7 @@ window.hqx = function( img, scale ) {
 		origPixels = getImagePixels( img, 0, 0, img.width, img.height ).data;
 		scaled = document.createElement('canvas');
 	}
-	
-	
+
 	// pack RGBA colors into integers
 	var count = img.width * img.height;
 	var src = _src = new Array(count);
@@ -227,15 +201,15 @@ window.hqx = function( img, scale ) {
 	if( scale === 2 ) hq2x( img.width, img.height );
 	else if( scale === 3 ) hq3x( img.width, img.height );
 	else if( scale === 4 ) hq4x( img.width, img.height );
-	// alternative: window['hq'+scale+'x']( img.width, img.height ); 
+	// alternative: window['hq'+scale+'x']( img.width, img.height );
 
 	scaled.width = img.width * scale;
 	scaled.height = img.height * scale;
-	
+
 	var scaledCtx = scaled.getContext('2d');
 	var scaledPixels = scaledCtx.getImageData( 0, 0, scaled.width, scaled.height );
 	var scaledPixelsData = scaledPixels.data;
-	
+
 	// unpack integers to RGBA
 	var c, a, destLength = dest.length;
 	for( var j = 0; j < destLength; j++ ) {
@@ -270,11 +244,10 @@ var hq2x = function( width, height ) {
 
 		dp = 0,
 		sp = 0;
-		
+
 	// internal to local optimization
-	var 
+	var
 		Diff = _Diff,
-		Math = _Math,
 		RGBtoYUV = _RGBtoYUV,
 		Interp1 = _Interp1,
 		Interp2 = _Interp2,
@@ -297,7 +270,7 @@ var hq2x = function( width, height ) {
 		trU = _trU,
 		trV = _trV,
 		YUV1, YUV2;
-		
+
 
     //   +----+----+----+
     //   |    |    |    |
@@ -3047,9 +3020,8 @@ var hq3x = function( width, height ) {
 		sp = 0;
 
 	// internal to local optimization
-	var 
+	var
 		Diff = _Diff,
-		Math = _Math,
 		RGBtoYUV = _RGBtoYUV,
 		Interp1 = _Interp1,
 		Interp2 = _Interp2,
@@ -6795,9 +6767,8 @@ var hq4x = function( width, height ) {
 		sp = 0;
 
 	// internal to local optimization
-	var 
+	var
 		Diff = _Diff,
-		Math = _Math,
 		RGBtoYUV = _RGBtoYUV,
 		Interp1 = _Interp1,
 		Interp2 = _Interp2,
@@ -11870,5 +11841,3 @@ var hq4x = function( width, height ) {
         dp += (dpL * 3);
     }
 }
-
-})(this);

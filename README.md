@@ -1,25 +1,38 @@
-js-hqx
-==========
+hqx
+===
 
-#### hqx Pixel Art Scaling Algorithm for JavaScript/Canvas ####
+**hqx Pixel Art Scaling Algorithm for JavaScript/Canvas**
 
-This project is a direct port of the C source code for the [hqx scaling algorithm](http://en.wikipedia.org/wiki/Hqx). It uses the HTML5 Canvas element to get an manipulate pixel data of an image.
+This project is a fork of
+[phoboslab/js-hqx](https://github.com/phoboslab/js-hqx), adding support to Node,
+through [node-canvas](https://github.com/Automattic/node-canvas).
 
-The source is unoptimized and probably many times slower than it could be. RGBA components are first packed into integers processed by hqx and then unpacked again. The source is pretty large (~400kb), because all 3 hqx scaling algorithms are included, but it can be gzipped quite well (~27kb).
+CLI Usage
+---
 
-Some basic support for alpha transparency has been added.
+Install hqx:
 
+```
+npm install -g hqx
+```
 
-### Demo ###
+Run with input + scale ratio:
 
-[Simple Test Image](http://www.phoboslab.org/files/js-hqx/)
+```
+hqx test.png 2 > test-2x.png
+hqx test.png 3 > test-3x.png
+hqx test.png 4 > test-4x.png
+```
 
-[Biolab Disaster Scaled With hqx](http://playbiolab.com/hqx.php)
+Usage
+---
 
+  var scaledCanvas = hqx( originalImage, 3 );
 
-
-### Usage ###
-
-	var scaledCanvas = hqx( originalImage, 3 );
-	
 The second argument is the scaling factor. hqx supports 2, 3 and 4. See test.html for an example.
+
+License
+---
+
+Please see LICENSE file.
+

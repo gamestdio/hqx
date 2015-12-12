@@ -1,0 +1,35 @@
+{
+  "name": "hqx",
+  "version": "1.0.0",
+  "description": "Pixel Art Scaling Algorithm for JavaScript/Canvas",
+  "main": "src/index.js",
+  "bin": {
+    "hqx": "./bin/hqx"
+  },
+  "scripts": {
+    "dist": "browserify -e src/index.js --exclude 'node_modules/**' --ignore-missing --bare  --standalone hqx -o dist/hqx.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamestdio/hqx.git"
+  },
+  "keywords": [
+    "hqx",
+    "pixel",
+    "scale",
+    "magnify"
+  ],
+  "author": "Endel Dreyer",
+  "license": "LGPL-2.1",
+  "bugs": {
+    "url": "https://github.com/gamestdio/hqx/issues"
+  },
+  "homepage": "https://github.com/gamestdio/hqx#readme",
+  "dependencies": {
+    "canvas": "^1.3.5"
+  },
+  "devDependencies": {
+    "browserify": "^12.0.1"
+  }
+}

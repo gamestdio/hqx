@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+global.window = global
 
 var fs = require('fs')
   , hqx = require('../src/index.js')
@@ -8,7 +9,6 @@ var fs = require('fs')
   , scale = parseInt(process.argv[3] || 4)
 
 // Make node-canvas available as a regular HTMLCanvasElement
-global.window = global
 global.HTMLCanvasElement = Canvas
 global.document = { createElement: function() { return new HTMLCanvasElement() } }
 

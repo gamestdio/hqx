@@ -4,13 +4,13 @@ global.window = global
 
 var fs = require('fs')
   , hqx = require('../src/index.js')
-  , Canvas = require('canvas')
-  , Image = Canvas.Image
+  , canvas = require('canvas')
+  , Image = canvas.Image
   , scale = parseInt(process.argv[3] || 4)
 
 // Make node-canvas available as a regular HTMLCanvasElement
-global.HTMLCanvasElement = Canvas
-global.document = { createElement: function() { return new HTMLCanvasElement() } }
+global.HTMLCanvasElement = canvas.Canvas;
+global.document = { createElement: function() { return canvas.createCanvas() } }
 
 if (!fs.existsSync(process.argv[2])) {
   console.log("hqx usage:")
